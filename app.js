@@ -46,7 +46,16 @@ const devDbUrl = 'mongodb+srv://your_user_name:your_password@cluster0.cojoign.mo
 const mongoDB = mongodbURI || devDbUrl;
 
 async function main() {
-  await mongoose.connect(mongoDB);
+  try {
+    await mongoose.connect(mongoDB, {
+      connectTimeoutMS: 30000, // Increase connection timeout to 30 seconds
+      socketTimeoutMS: 45000   // Increase socket timeout to 45 seconds
+    });
+    console.log('Connected to MongoDB successfully!');
+  } catch (error) {
+    console.error('Error connecting to MongoDB:', error);
+    process.exit(1);
+  }
 }
 
 main().catch((err) => {
